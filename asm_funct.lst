@@ -1,0 +1,111 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;VARIABILI ALIAS FISSE IN ALTO A SINISTRA
+    2 00000000         ;base0 RN 0      ;chiamo R0 con "base"
+    3 00000000         ;base1 RN 1      ;chiamo R1 con "offset"
+    4 00000000         
+    5 00000000         ;currval RN 4 
+    6 00000000         ;offset RN 5
+    7 00000000         ;indirizzo RN 6
+    8 00000000         ;indice RN 7
+    9 00000000         ;xxx RN 8
+   10 00000000         
+   11 00000000         ;N EQU 4 ;definizione di costante
+   12 00000000                 AREA             asm_functions, CODE, READONLY
+   13 00000000                 EXPORT           funzioneASM
+   14 00000000         funzioneASM
+   15 00000000         ;ARGOMENTI PASSATI DA C ad ASM:        r0, r1, r2, r3
+   16 00000000         ;ARGOMENTI DI RITORNO CHE MANDO AL C:  r0, r1
+   17 00000000 46EC            MOV              r12, sp     ;salva lo stack poi
+                                                            nter per poter acce
+                                                            dere al suo contenu
+                                                            to velocemente
+   18 00000002         ;push9   ;---STACK----
+   19 00000002         ;push8   ;|r4 |+28        |push1| SP   |push1|+4   |push
+                       1|+8   |push1|+16   
+   20 00000002         ;push7   ;|r5 |+24                     |push2|SP   |push
+                       2|+4   |push2|+8   
+   21 00000002         ;push6   ;|r6 |+20                                 |push
+                       3|SP   |push3|+4   
+   22 00000002         ;push5   ;|r7 |+16                                      
+                              |push4|SP   
+   23 00000002         ;push4 +44  ;|r8 |+12
+   24 00000002         ;push3 +40  ;|r10|+8
+   25 00000002         ;push2 +36  ;|r11|+4
+   26 00000002         ;push1 +32  ;|lr |SP
+   27 00000002         ;-------------------------------------------------------
+                       --------------------------------
+   28 00000002         ;ldr r1,[sp,#4]     ;carica in r1 l'SP+4
+   29 00000002         ;ldr indirizzo, =datablock   ;carica l'indirizzo di data
+                       block dentro indirizzo (r6), creando un literal pool
+   30 00000002         ;ldr currval,[indirizzo,offset] ;scorro i valori del lit
+                       eral pool
+   31 00000002         ;-------------------------------------------------------
+                       --------------------------------
+   32 00000002 E92D 4DF0       STMFD            sp!,{r4-r8,r10-r11,lr} ;salva i
+                                                             registri che posso
+                                                             usare come variabi
+                                                            li per questo progr
+                                                            amma ASM
+   33 00000006         
+   34 00000006         ;mov indice,#0     ;resetta le variabili che uso per il 
+                       ciclo
+   35 00000006         ;mov offset,#0     ;resetta le variabili che uso per il 
+                       ciclo
+   36 00000006         ;loop          ;CICLO
+   37 00000006         
+   38 00000006         
+   39 00000006         
+   40 00000006         ;add indice,#1     ;da 0 a N-1 CICLA
+   41 00000006         ;cmp indice,N
+   42 00000006         ;bne loop
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   43 00000006         
+   44 00000006         
+   45 00000006         
+   46 00000006 E8BD 8DF0       LDMFD            sp!,{r4-r8,r10-r11,pc} ;riprist
+                                                            ina i registri vola
+                                                            tile
+   47 0000000A         ;DICHIARAZIONE DI DATABLOCK GIA' ALLINEATO
+   48 0000000A         ;   align 4   
+   49 0000000A         ;datablock  DCD 0x11 0x22 0x33   
+   50 0000000A                 END
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
+ork --depend=.\asm_funct.d -o.\asm_funct.o -I.\RTE\_Target_1 -IC:\Users\main\Ap
+pData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include -IC:\Users\main\AppDat
+a\Local\Arm\Packs\Keil\LPC1700_DFP\2.6.0\Device\Include --predefine="__EVAL SET
+A 1" --predefine="__UVISION_VERSION SETA 529" --predefine="_RTE_ SETA 1" --pred
+efine="LPC175x_6x SETA 1" --list=.\asm_funct.lst RIT\ASM_funct.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+asm_functions 00000000
+
+Symbol: asm_functions
+   Definitions
+      At line 12 in file RIT\ASM_funct.s
+   Uses
+      None
+Comment: asm_functions unused
+funzioneASM 00000000
+
+Symbol: funzioneASM
+   Definitions
+      At line 14 in file RIT\ASM_funct.s
+   Uses
+      At line 13 in file RIT\ASM_funct.s
+Comment: funzioneASM used once
+2 symbols
+336 symbols in table
